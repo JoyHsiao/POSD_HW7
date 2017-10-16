@@ -13,6 +13,6 @@ public:
     };                                   
     virtual bool match(Term & term) {
         return symbol() == term.symbol();
-    }                                                                       
+    }
 };
 #endif                                   

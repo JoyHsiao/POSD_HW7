@@ -4,14 +4,14 @@
 #include <vector>
 #include <string>
 #include "term.h"
-
+#include "atom.h"
 using std::string;
 
 class Struct:public Term
 {
 public:
     Struct(Atom const & name, std::vector<Term *> args):_name(name), _args(args) {}
-    
+
     Term * args(int index) {
         return _args[index];
     }
@@ -26,7 +26,7 @@ public:
             ret += _args[i]-> symbol() + ", ";
         ret += _args[_args.size()-1]-> symbol() + ")";
         return  ret;
-  }
+    }
 
     bool match(Term &term){
         Struct * ps = dynamic_cast<Struct *>(&term);
