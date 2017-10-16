@@ -5,6 +5,9 @@
 #include <string>
 #include "term.h"
 #include "atom.h"
+
+//#define DEBUG1
+
 using std::string;
 
 class Struct:public Term
@@ -20,10 +23,46 @@ public:
         return _name;
     }
 
+    string value(){
+    #ifdef DEBUG1
+    std::cout<<"= "<<_args[0]->type() << _args[0]->symbol()<<std::endl;
+    #endif
+        string ret =_name.symbol() + "(";
+        _value = &ret;
+        if(_args[0]->type() == "variable"){
+            for(int i = 0; i < _args.size() - 1 ; i++){
+                ret += _args[i]-> value() + ", ";
+            }
+            ret += _args[_args.size()-1]-> value() + ")";
+        }
+        if(_args[0]->type() != "variable" && _args[0]->type() != "struct"){
+            for(int i = 0; i < _args.size() - 1 ; i++){
+                ret += _args[i]-> symbol() + ", ";
+            }
+            ret += _args[_args.size()-1]-> symbol() + ")";
+        }
+        if(_args[0]->type() == "struct"){
+            #ifdef DEBUG1
+            std::cout<<"=== "<<_args[0]->type()<< " "<< _args[0]->symbol()<<" " <<_args.size() ;
+            std::cout<< " "<< _args[0]->link.size()<< " "<< _args[0]->value()<<std::endl;
+            #endif
+            for(int i = 0; i < _args.size() - 1 ; i++){
+                ret += _args[i]-> value() + ", ";
+            }
+            ret += _args[0]-> value() + ")";
+        }
+    #ifdef DEBUG1
+    std::cout<<"===== "<<_args[0]->symbol()<< ": "<<_args[0]->value() << " "<< ret <<std::endl;
+    #endif
+        return  ret;
+        //return *_value;
+    }
+
     string symbol() const{
         string ret =_name.symbol() + "(";
-        for(int i = 0; i < _args.size() - 1 ; i++)
+        for(int i = 0; i < _args.size() - 1 ; i++){
             ret += _args[i]-> symbol() + ", ";
+        }
         ret += _args[_args.size()-1]-> symbol() + ")";
         return  ret;
     }
@@ -43,9 +82,11 @@ public:
         }
     return false;
     }
+    string type() const{return _type;}
+    string _type = "struct";
 private:
-  Atom _name;
-  std::vector<Term *> _args;
+    Atom _name;
+    std::vector<Term *> _args;
 };
 
 #endif
