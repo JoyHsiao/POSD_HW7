@@ -26,6 +26,19 @@ TEST (Variable , haveValue){
   ASSERT_FALSE(X.match(jerry));
 }
 
+// --------------
+TEST (Variable , Joy){
+  Atom tom ("tom");
+  Variable X("X");
+  Variable Y("Y");
+  X.match(tom);
+  X.match(Y);
+  ASSERT_EQ(X.value(),"Y");
+  
+  //ASSERT_TRUE(X.match(tom));
+  //ASSERT_FALSE(X.match(jerry));
+}
+
 // ?- X=2.7182.
 // X=2.7182
 TEST(Variable , numE_to_varX){

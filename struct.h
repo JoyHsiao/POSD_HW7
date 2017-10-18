@@ -49,7 +49,7 @@ public:
             for(int i = 0; i < _args.size() - 1 ; i++){
                 ret += _args[i]-> value() + ", ";
             }
-            ret += _args[0]-> value() + ")";
+            ret += _args[_args.size()-1]-> value() + ")";
         }
     #ifdef DEBUG1
     std::cout<<"===== "<<_args[0]->symbol()<< ": "<<_args[0]->value() << " "<< ret <<std::endl;
