@@ -24,7 +24,7 @@ public:
         if(term.type()=="variable"){
             if(_assignable){
                 if(term.assignable()){
-                    std::cout<<"@@@@@@"<< link.size()<<std::endl;
+                    //std::cout<<"@@@@@@"<< link.size()<<std::endl;
                     push = 1;
                     for (int i =0; i<link.size(); i++){
                         if(link[i]->_value == term._value && push)
@@ -33,32 +33,36 @@ public:
                     if(push){
                         link.push_back(&term);
                         term.link.push_back(this);
-                    for (int i =0; i<link.size(); i++){
-                    std::cout<<i<<std::endl;
-                        std::cout<<_symbol<< " "<<_value<<": "<< link[i]->_value<<std::endl;
-                        std::cout<<term.symbol()<< " "<< term._value<<": "<< term.link[i]->_value<<std::endl;
-                    }
+                    //for (int i =0; i<link.size(); i++){
+                    //std::cout<<i<<std::endl;
+                    //    std::cout<<_symbol<< " "<<_value<<": "<< link[i]->_value<<std::endl;
+                    //    std::cout<<term.symbol()<< " "<< term._value<<": "<< term.link[i]->_value<<std::endl;
+                    //}
                     }
                 }
                 else{
-                    std::cout<<"!!!!!!!"<<std::endl;
+                    //std::cout<<"!!!!!!!"<<std::endl;
                     _value = term._value;
                     _assignable = false;
                 }
             }
             else{
                 if(term.assignable()){
-                    std::cout<<"~~~~~"<<std::endl;
+                    //std::cout<<"~~~~~"<<std::endl;
                     push = 1;
                     for (int i =0; i<link.size(); i++){
                         if(link[i]->_value == term._value && push)
                             push = 0;
                     }
                     if(push){
-                    std::cout<<"~~~~~~~~~~" <<std::endl;
-                        string temp = *_value;
-                        if(temp[0]>96 && temp[0]<123)
-                            *_value = term.value();
+                    //std::cout<<"~~~~~~~~~~" <<std::endl;
+                        string temp = *_value, t_var = term.symbol();
+                        if(temp[0]>96 && temp[0]<123){
+                            term.link.push_back(this);
+                            link.push_back(&term);
+                            //term._value = _value;
+                            //*_value = t_var;
+                        }
                         else{
                         //link = term.link;
                         term.link.push_back(this);
@@ -91,20 +95,21 @@ public:
         }
 
         if(_assignable && term.type()=="atom" ){
+            link.push_back(&term);
             *_value = term.symbol();
             _assignable = false;
         }
         //if(_assignable && term.type()!="variable" && term.type()!="struct"){
         
         if(_assignable && term.type()=="number"){
-            std::cout<<"#######" <<std::endl;
+            //std::cout<<"#######" <<std::endl;
             *_value = term.value();
             for (int i =0; i<link.size(); i++){
-                std::cout<< link[i]->link.size()<< " "<< std::endl;
+                //std::cout<< link[i]->link.size()<< " "<< std::endl;
                 link[i]->_value= _value;
                 
                 for (int j =0; j<link[i]->link.size(); j++){
-                    std::cout<< link[i]->link[j]->_value<< std::endl;
+                    //std::cout<< link[i]->link[j]->_value<< std::endl;
                     link[i]->link[j]->_value=_value;
                 }
             }

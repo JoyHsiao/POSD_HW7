@@ -92,18 +92,16 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
     ASSERT_EQ( Z.value(), N.value());
 }
 
-// --------------
-TEST (Variable , Joy){
-  Atom tom ("tom");
-  Variable X("X");
-  Variable Y("Y");
-  X.match(tom);
-  X.match(Y);
-  ASSERT_EQ(X.value(),"Y");
-  
-  ASSERT_TRUE(Y.match(tom));
-  //ASSERT_FALSE(X.match(jerry));
-}
+//// --------------
+//TEST (Variable , Joy){
+//  Atom tom ("tom");
+//  Variable X("X");
+//  Variable Y("Y");
+//  X.match(tom);
+//  X.match(Y);
+//  ASSERT_EQ(X.value(),"Y");
+//  ASSERT_EQ(Y.value(),"tom");
+//}
 
 // ?- X=Y, X=Z, Z=1
 // X=1, Y=1, Z=1

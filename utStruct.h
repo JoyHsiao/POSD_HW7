@@ -169,7 +169,6 @@ TEST(Struct, nested_struct_and_multiVariable)
     std::vector<Term *> v2 = {&s2, &X};
     Struct s1(Atom("s1"), v2);
     X.match(Y);
-//    EXPECT_EQ("Y",Y.value());
     X.match(kent_beck);
     EXPECT_EQ("kent_beck",X.value());
 //    EXPECT_EQ("s2(kent_beck)",s2.value());
