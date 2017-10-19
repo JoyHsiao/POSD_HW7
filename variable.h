@@ -63,7 +63,6 @@ public:
                     }
                 }
             }
-
             //if(term.assignable() || _assignable){
             //    bool push = 1, push_term = 1;
             //    for (int i =0; i<link.size(); i++){
@@ -87,10 +86,16 @@ public:
             st_ptr = dynamic_cast<Struct *>(&term);
         }
 
-        if(_assignable && term.type()=="atom" ){
-            link.push_back(&term);
-            *_value = term.symbol();
-            _assignable = false;
+        if(term.type()=="atom" ){
+            if(_assignable){
+                //link.push_back(&term);
+                *_value = term.symbol();
+                _assignable = false;
+            }
+            else{
+                if(*_value == term.symbol())
+                    return true;
+            }
         }
         
         if(_assignable && term.type()=="number"){
@@ -104,7 +109,6 @@ public:
             }
             _assignable = false;
         }
-
         return ret;
     }
     string const _symbol;

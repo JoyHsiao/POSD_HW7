@@ -17,15 +17,14 @@
 //  ASSERT_EQ(Y.value(),"tom");
 //}
 //
-//// --------------
+// --------------
 //TEST (Variable , Joy2){
 //  Atom tom("tom");
 //  Atom teddy("teddy");
 //  Variable X("X");
 //  Variable Y("Y");
 //    ASSERT_TRUE(X.match(tom));
-//    ASSERT_TRUE(X.match(Y));
-//    ASSERT_FALSE(Y.match(teddy));
+//    ASSERT_TRUE(X.match(tom));
 //}
 //// --------------
 //TEST (Variable , Joy){
