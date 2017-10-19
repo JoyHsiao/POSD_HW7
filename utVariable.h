@@ -39,11 +39,14 @@
 //}
 //
 // --------------
-TEST (Variable , Joy2){
-  Atom tom("tom");
-  Variable X("X");
-    ASSERT_TRUE(tom.match(X));
-}
+//TEST (Variable , Joy2){
+//  Atom tom("tom");
+//  Variable X("X");
+//  Number N(1);
+//  Number Y(1);
+//  ASSERT_TRUE(N.match(N));
+//ASSERT_TRUE(N.match(X));
+//}
 
 TEST(Variable, constructor){
   Variable X("X");
