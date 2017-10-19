@@ -70,17 +70,19 @@ public:
     bool match(Term &term){
         Struct * ps = dynamic_cast<Struct *>(&term);
         if (ps){
-            if (!_name.match(ps->_name))
+            if (!_name.match(ps->_name)){
                 return false;
-        if(_args.size()!= ps->_args.size())
-            return false;
-        for(int i=0;i<_args.size();i++){
-            if(_args[i]->symbol() != ps->_args[i]->symbol())
+            }
+            if(_args.size()!= ps->_args.size()){
                 return false;
+            }
+            for(int i=0;i<_args.size();i++){
+                if(_args[i]->symbol() != ps->_args[i]->symbol())
+                    return false;
+            }
+            return true;
         }
-        return true;
-        }
-    return false;
+        return false;
     }
     string type() const{return _type;}
     string _type = "struct";

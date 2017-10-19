@@ -18,5 +18,6 @@ public:
     virtual bool assignable() {return false;}
     string *_value=0;
     std::vector<Term *>link;
+    bool _assignable=false;
 };
 #endif                                   

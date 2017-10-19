@@ -6,6 +6,45 @@
 #include "atom.h"
 #include "number.h"
 
+//// --------------
+//TEST (Variable , Joy){
+//  Atom tom ("tom");
+//  Variable X("X");
+//  Variable Y("Y");
+//  X.match(tom);
+//  X.match(Y);
+//  ASSERT_EQ(X.value(),"Y");
+//  ASSERT_EQ(Y.value(),"tom");
+//}
+//
+//// --------------
+//TEST (Variable , Joy2){
+//  Atom tom("tom");
+//  Atom teddy("teddy");
+//  Variable X("X");
+//  Variable Y("Y");
+//    ASSERT_TRUE(X.match(tom));
+//    ASSERT_TRUE(X.match(Y));
+//    ASSERT_FALSE(Y.match(teddy));
+//}
+//// --------------
+//TEST (Variable , Joy){
+//  Atom tom ("tom");
+//  Variable X("X");
+//  Variable Y("Y");
+//  X.match(tom);
+//  X.match(Y);
+//  ASSERT_EQ(X.value(),"Y");
+//  ASSERT_EQ(Y.value(),"tom");
+//}
+//
+// --------------
+TEST (Variable , Joy2){
+  Atom tom("tom");
+  Variable X("X");
+    ASSERT_TRUE(tom.match(X));
+}
+
 TEST(Variable, constructor){
   Variable X("X");
   ASSERT_EQ("X", X._symbol);
@@ -91,17 +130,6 @@ TEST (Variable, num1_to_varZ_to_varY_to_varX) {
     ASSERT_EQ( Y.value(), N.value());
     ASSERT_EQ( Z.value(), N.value());
 }
-
-//// --------------
-//TEST (Variable , Joy){
-//  Atom tom ("tom");
-//  Variable X("X");
-//  Variable Y("Y");
-//  X.match(tom);
-//  X.match(Y);
-//  ASSERT_EQ(X.value(),"Y");
-//  ASSERT_EQ(Y.value(),"tom");
-//}
 
 // ?- X=Y, X=Z, Z=1
 // X=1, Y=1, Z=1
