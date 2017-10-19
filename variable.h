@@ -24,6 +24,7 @@ public:
         if(term.type()=="variable"){
             if(_assignable){
                 if(term.assignable()){
+                    _value = term._value;
                     push = 1;
                     for (int i =0; i<link.size(); i++){
                         if(link[i]->_value == term._value && push)
