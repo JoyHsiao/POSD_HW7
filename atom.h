@@ -3,6 +3,8 @@
 
 #include <string>
 #include "term.h"
+#include "list.h"
+
 //#define DEBUG
 using std::string;
 
@@ -26,7 +28,7 @@ public:
             #endif
             return false;
         }
-        else if(term.type() == "atom" && _value != term._value && *_value != term.symbol()){
+        else if(term.type() == "atom" && _value != term._value && *_value != term.symbol() || term.type() =="list"){
             #ifdef DEBUG
             std::cout<< "Atom match: "<< term.type()<< _value << " "<< term._value << std::endl;
             std::cout<< *_value<< " "<< term.symbol() << std::endl;
@@ -51,12 +53,14 @@ public:
                 std::cout<< "Atom match: true. "<< term._value <<" "<< _value <<" " << term.type() << " assign: " << term._assignable << std::endl;
                  #endif
             }
-        } 
+        }
+
                 #ifdef DEBUG
                 std::cout<< "======================="<< std::endl;
                  #endif
         return true;
     }
     string _type = "atom";
+    List *l_ptr=0;
 };
 #endif

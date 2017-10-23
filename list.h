@@ -1,0 +1,98 @@
+#ifndef LIST_H
+#define LIST_H
+
+#include "term.h"
+
+#include <vector>
+using std::vector;
+
+class List : public Term {
+public:
+  string symbol() const{
+    string ret ="[";
+    if(_elements.size()>0){
+        for (int i=0; i<_elements.size()-1; i++){
+            ret += _elements[i]->symbol() + ", ";
+        }
+        ret += _elements[_elements.size()-1]->symbol() + "]";
+    }
+    else
+        ret +="]";
+    return ret;
+  }
+
+  string value() const {
+    string ret ="[";
+    if(_elements.size()>0){
+        for (int i=0; i<_elements.size()-1; i++){
+            ret += _elements[i]->value() + ", ";
+        }
+        ret += _elements[_elements.size()-1]->value() + "]";
+    }
+    else
+        ret +="]";
+    return ret;
+  };
+
+  bool match(Term & term) {
+    bool ret = true;
+    if(term.type()=="list"){
+        List * ps = dynamic_cast<List *>(&term);
+        if(ps){
+            for (int i=0; i<_elements.size(); i++){
+                if(_elements.size() == ps->_elements.size()){
+                    if((_elements[i]->type() == ps->_elements[i]->type())){
+                        if(_elements[i]->value() == ps->_elements[i]->value())
+                            ret = true;
+                    }
+                    else{
+                        if(_elements[i]->type() == "variable" && _elements[i]->_assignable){
+                            _elements[i]->_value = ps->_elements[i]->_value;
+                            ret= true;
+                        }
+                        else if(ps->_elements[i]->type() == "variable" && ps->_elements[i]->_assignable){
+                            ps->_elements[i]->_value = _elements[i]->_value;
+                            ret = true;
+                        }
+                        else
+                            return false;                        
+                    }
+                }
+                else
+                    return false;
+            }
+        }
+    }
+    return ret;
+  };
+
+  string type() const{
+    return _type;
+  }
+
+  string _type = "list";
+public:
+  List (): _elements() {}
+  List (vector<Term *> const & elements):_elements(elements){}
+  Term * head() {
+    return _elements[0];
+  };
+
+  List * tail() const {
+    vector<Term *> _tail;
+    std::cout<<"~~~~"<<_elements.size()<<std::endl;
+
+    if(_elements.size()>2){
+        for (int i=1; i<_elements.size()-1; i++){
+            //std::cout<<"~~~~~~~~"<< i << " "<<_elements[i]<<std::endl;
+            //_tail.push_back(_elements[i]);
+        }
+    }
+  };
+
+private:
+  vector<Term *> _elements;
+
+};
+
+#endif

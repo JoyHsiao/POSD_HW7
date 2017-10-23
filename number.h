@@ -21,7 +21,7 @@ public:
         return _type;
     }
     bool match(Term &term){
-        if(term.type() == "atom")
+        if(term.type() == "atom" || term.type() == "list")
             return false;
         else if(term.type() == "number" && term.value()!=_symbol){
             #ifdef DEBUG_N

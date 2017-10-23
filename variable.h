@@ -86,7 +86,7 @@ public:
             st_ptr = dynamic_cast<Struct *>(&term);
         }
 
-        if(term.type()=="atom" ){
+        if(term.type()=="atom" || term.type()=="list"){
             if(_assignable){
                 //link.push_back(&term);
                 *_value = term.symbol();
