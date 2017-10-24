@@ -77,7 +77,7 @@ public:
   List * tail() {
     List *_tail = new List;
     if(_elements.size()<1)
-        throw string("Accessing head in an empty list");
+        throw string("Accessing tail in an empty list");
 
     if(_elements.size()>1){
         for (int i=1; i<_elements.size(); i++){
