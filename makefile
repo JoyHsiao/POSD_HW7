@@ -1,10 +1,10 @@
-all: hw3
+all: hw4
 
-hw3: hw3.o
+hw4: hw3.o
 ifeq (${OS}, Windows_NT)
-	g++ -g3 -o hw3 hw3.o -lgtest
+	g++ -g3 -o hw4 hw3.o -lgtest
 else
-	g++ -g3 -o hw3 hw3.o -lgtest -lpthread
+	g++ -g3 -o hw4 hw3.o -lgtest -lpthread
 endif
 
 hw3.o: hw3.cpp term.h utList.h list.h utStruct.h utVariable.h struct.h variable.h atom.h number.h
@@ -12,9 +12,9 @@ hw3.o: hw3.cpp term.h utList.h list.h utStruct.h utVariable.h struct.h variable.
 
 clean:
 ifeq (${OS}, Windows_NT)
-	del *.o hw3
+	del *.o hw4
 else
-	rm -f *.o hw3
+	rm -f *.o hw4
 endif
 
 stat:
