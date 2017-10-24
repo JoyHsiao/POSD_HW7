@@ -158,7 +158,6 @@ TEST(List, matchVarinListToAtomShouldSucceed) {
     List l(args);
     Y.match(l);
     X.match(alan_mathison_turing);
-    std::cout<< Y.value()<< " " << X.value()<<std::endl;
     EXPECT_EQ(Y.value(), "[496, alan_mathison_turing, terence_tao]");
 }
 
@@ -182,19 +181,32 @@ TEST(List, headAndTailMatching2) {
   vector<Term *> args = {&f, &s, &t};
   List l(args);
 
-//  EXPECT_EQ(string("second"), l.tail()->head()->value());
-//  EXPECT_EQ(string("[third]"), l.tail()->tail()->value());
+  EXPECT_EQ(string("second"), l.tail()->head()->value());
+  EXPECT_EQ(string("[third]"), l.tail()->tail()->value());
 }
 
 // ?- [[first], second, third] = [H|T].
 // H = [first], T = [second, third].
 TEST(List, headAndTailMatching3) {
+  Atom f("first"), s("second"), t("third");
+  vector<Term *> args1 = {&f};
+  List l1(args1);
+  vector<Term *> args2 = {&l1, &s, &t};
+  List l2(args2);
 
+  EXPECT_EQ(string("[first]"), l2.head()->value());
+  EXPECT_EQ(string("[second, third]"), l2.tail()->value());
 }
 
 // ?- [first, second, third] = [first, second, H|T].
 // H = third, T = [].
 TEST(List, headAndTailMatching4) {
+  Atom f("first"), s("second"), t("third");
+  vector<Term *> args = {&f, &s, &t};
+  List l(args);
+
+  EXPECT_EQ(string("third"), l.tail()->tail()->head()->value());
+  EXPECT_EQ(string("[]"), l.tail()->tail()->tail()->value());
 
 }
  
@@ -202,14 +214,28 @@ TEST(List, headAndTailMatching4) {
 // When client still want to get the head of list
 // Then it should throw a string: "Accessing head in an empty list" as an exception.
 TEST (List, emptyExecptionOfHead) {
-
+  vector<Term *> args = {};
+  List l(args);
+  try{
+    l.head();
+  }
+  catch (const string err){
+    EXPECT_EQ(string("Accessing head in an empty list"), err);
+  }
 }
 
 // Given there is a empty list
 // When client still want to get the head of list
 // Then it should throw a string: "Accessing tail in an empty list" as an exception.
 TEST (List, emptyExecptionOfTail) {
-
+  vector<Term *> args = {};
+  List l(args);
+  try{
+    l.tail();
+  }
+  catch (const string err){
+    EXPECT_EQ(string("Accessing head in an empty list"), err);
+  }
 }
 
 

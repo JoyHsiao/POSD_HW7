@@ -4,6 +4,7 @@
 #include <string>
 #include "term.h"
 #include "struct.h"
+#include "list.h"
 
 //#define DEBUG
 
@@ -14,6 +15,8 @@ public:
     string value(){
         if(st_ptr!=0 && (st_ptr->type() =="struct"))
             *_value = st_ptr->value();
+        if(list_ptr!=0 && (list_ptr->type() =="list"))
+            *_value = list_ptr->value();
         return *_value;
     }
     string type() const{return _type;}
@@ -86,7 +89,20 @@ public:
             st_ptr = dynamic_cast<Struct *>(&term);
         }
 
-        if(term.type()=="atom" || term.type()=="list"){
+        if(term.type()=="list"){
+            list_ptr = dynamic_cast<List *>(&term);
+            if(_assignable){
+                //link.push_back(&term);
+                *_value = term.value();
+                _assignable = false;
+            }
+            else{
+                if(*_value == term.value())
+                    return true;
+            }
+        }
+
+        if(term.type()=="atom"){
             if(_assignable){
                 //link.push_back(&term);
                 *_value = term.symbol();
@@ -114,6 +130,7 @@ public:
     string const _symbol;
     string _type = "variable";
     Struct *st_ptr=0;
+    List *list_ptr=0;
 private:
     string v_value = _symbol;
 };

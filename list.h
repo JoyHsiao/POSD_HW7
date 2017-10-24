@@ -21,7 +21,7 @@ public:
     return ret;
   }
 
-  string value() const {
+  string value() {
     string ret ="[";
     if(_elements.size()>0){
         for (int i=0; i<_elements.size()-1; i++){
@@ -75,19 +75,23 @@ public:
   List (): _elements() {}
   List (vector<Term *> const & elements):_elements(elements){}
   Term * head() {
+    if(_elements.size()<1)
+        throw string("Accessing head in an empty list");
+
     return _elements[0];
   };
 
-  List * tail() const {
-    vector<Term *> _tail;
-    std::cout<<"~~~~"<<_elements.size()<<std::endl;
+  List * tail() {
+    List *_tail = new List;
+    if(_elements.size()<1)
+        throw string("Accessing head in an empty list");
 
-    if(_elements.size()>2){
-        for (int i=1; i<_elements.size()-1; i++){
-            //std::cout<<"~~~~~~~~"<< i << " "<<_elements[i]<<std::endl;
-            //_tail.push_back(_elements[i]);
+    if(_elements.size()>1){
+        for (int i=1; i<_elements.size(); i++){
+            _tail->_elements.push_back(_elements[i]);
         }
     }
+    return _tail;
   };
 
 private:
