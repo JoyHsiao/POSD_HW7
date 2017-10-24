@@ -56,11 +56,12 @@ public:
                             ret = true;
                         }
                         else
-                            return false;                        
+                            ret = false;                        
                     }
+                    ret = false;
                 }
                 else
-                    return false;
+                    ret = false;
             }
         }
     }
