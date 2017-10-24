@@ -23,6 +23,7 @@ public:
 
   string value() {
     string ret ="[";
+    _value = &ret;
     if(_elements.size()>0){
         for (int i=0; i<_elements.size()-1; i++){
             ret += _elements[i]->value() + ", ";
@@ -94,9 +95,7 @@ public:
     return _tail;
   };
 
-private:
   vector<Term *> _elements;
-
 };
 
 #endif

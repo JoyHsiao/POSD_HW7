@@ -92,6 +92,11 @@ public:
         if(term.type()=="list"){
             list_ptr = dynamic_cast<List *>(&term);
             if(_assignable){
+                for(int i=0; i< list_ptr->_elements.size()-1; i++){
+                    if(*_value == list_ptr->_elements[i]->symbol()){
+                        return false;
+                    }
+                }
                 //link.push_back(&term);
                 *_value = term.value();
                 _assignable = false;
