@@ -44,24 +44,15 @@ public:
                 if(_elements.size() == ps->_elements.size()){
                     if((_elements[i]->type() == ps->_elements[i]->type())){
                         if(_elements[i]->value() == ps->_elements[i]->value())
-                            ret = true;
+                            continue;
                     }
-                    else{
-                        if(_elements[i]->type() == "variable" && _elements[i]->_assignable){
-                            _elements[i]->_value = ps->_elements[i]->_value;
-                            ret= true;
-                        }
-                        else if(ps->_elements[i]->type() == "variable" && ps->_elements[i]->_assignable){
-                            ps->_elements[i]->_value = _elements[i]->_value;
-                            ret = true;
-                        }
-                        else
-                            ret = false;                        
-                    }
-                    ret = false;
+                    else if(_elements[i]->type() == "variable" && _elements[i]->_assignable)
+                        _elements[i]->_value = ps->_elements[i]->_value;
+                    else if(ps->_elements[i]->type() == "variable" && ps->_elements[i]->_assignable)
+                        ps->_elements[i]->_value = _elements[i]->_value;
+                    else
+                        ret = false;
                 }
-                else
-                    ret = false;
             }
         }
     }
