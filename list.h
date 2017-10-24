@@ -37,7 +37,7 @@ public:
 
   bool match(Term & term) {
     bool ret = true;
-    if(term.type()=="list"){
+    if(term.type()=="list" || term.type()=="variable"){
         List * ps = dynamic_cast<List *>(&term);
         if(ps){
             for (int i=0; i<_elements.size(); i++){
