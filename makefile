@@ -1,20 +1,21 @@
-all: hw4
+all: hw5
 
-hw4: hw3.o
+hw5: hw5.o
 ifeq (${OS}, Windows_NT)
-	g++ -g3 -o hw4 hw3.o -lgtest
+	g++ -g3 -o hw5 hw5.o -lgtest
 else
-	g++ -g3 -o hw4 hw3.o -lgtest -lpthread
+	g++ -g3 -o hw5 hw5.o -lgtest -lpthread
 endif
 
-hw3.o: hw3.cpp term.h utList.h list.h utStruct.h utVariable.h struct.h variable.h atom.h number.h
-	g++ -std=gnu++0x -c hw3.cpp
+hw5.o: hw5.cpp term.h atom.h number.h variable.h struct.h list.h scanner.h parser.h utParser.h utScanner.h
+#utVariable.h utStruct.h utList.h utScanner.h utParser.h
+	g++ -std=gnu++0x -c hw5.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)
-	del *.o hw4
+	del *.o hw5
 else
-	rm -f *.o hw4
+	rm -f *.o hw5
 endif
 
 stat:
