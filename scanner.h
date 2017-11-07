@@ -11,7 +11,7 @@ using std::vector;
 
 class Scanner {
 public:
-  Scanner (string in=""):buffer(in), pos(0), _tokenValue(NONE){}
+  Scanner (string in=""):buffer(in), pos(0), ary(0), _tokenValue(NONE){}
   void setInput(string in) {buffer = in;}
 
   int nextToken() {
@@ -32,11 +32,17 @@ public:
         string s = extractVar();
         processToken<VAR>(s);
         return VAR;
-      } else if (currentChar() == '[' || currentChar() == ']'){
-        string s = extractAry();
-        processToken<ARY>(s);
-        return ARY;
       }
+      //} else if (currentChar() == '[' || currentChar() == ']'){
+      //  if(currentChar() == '[')
+      //      ary++;
+      //  else
+      //      ary--;
+      //  std::cout<<"::::::::::::::::::"<<ary<<std::endl;
+      //  string s = extractAry();
+      //  processToken<ARY>(s);
+      //  return ARY;
+      //}
       else{
         _tokenValue = NONE;
         return extractChar();
@@ -51,9 +57,16 @@ public:
   }
 
   int position() const {return pos;}
+  
+  int ary_num() {return ary;}
 
   char currentChar() {
     return buffer[pos];
+  }
+
+  int nextTerm() {
+    int posBegin = skipLeadingWhiteSpace();
+    return buffer[pos]; 
   }
 
   // extractX: extract X and set position right after X
@@ -81,11 +94,11 @@ public:
     return buffer.substr(posBegin, pos-posBegin);
   }
 
-  string extractAry() {
-    int posBegin = position();
-    for (;isArray(buffer[pos]); ++pos);
-    return buffer.substr(posBegin, pos-posBegin);
-  }
+  //string extractAry() {
+  //  int posBegin = position();
+  //  for (;isArray(buffer[pos]); ++pos);
+  //  return buffer.substr(posBegin, pos-posBegin);
+  //}
 
   char extractChar() {
         return buffer[pos++];
@@ -94,6 +107,7 @@ public:
 private:
   string buffer;
   int pos;
+  int ary;
   int _tokenValue;
 
 private:

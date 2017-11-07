@@ -16,17 +16,11 @@ const int NUMBER = 256;
 const int ATOM = 257;
 const int ATOMSC = 258;
 const int VAR = 259;
-const int ARY = 260;
 
 #include <vector>
 using std::vector;
 
 vector<pair<string, int>> symtable;
-
-bool isArray(char c) {
-    return c == '['
-            || c == ']';
-}
 
 bool isSpecialCh(char c) {
   return c == '+'

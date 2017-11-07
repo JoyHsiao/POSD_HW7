@@ -1,7 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include <string>
+#include <stack>
+
 using std::string;
+using std::stack;
 
 #include "atom.h"
 #include "number.h"
@@ -20,7 +23,16 @@ public:
     }else if(token == NUMBER){
       return new Number(_scanner.tokenValue());
     }else if(token == ATOM){
-        int str_l=0, str_r=0;
+        Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+        if(_scanner.currentChar() == '(' ) {
+          _scanner.nextToken();
+          vector<Term*> terms = getArgs();
+          if(_currentToken == ')')
+            return new Struct(*atom, terms);
+        }
+        else
+          return atom;
+    }else if(token == ATOMSC){
         Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
         if(_scanner.currentChar() == '(' ) {
           _scanner.nextToken() ;
@@ -30,24 +42,20 @@ public:
         }
         else
           return atom;
-    }else if(token == ARY){
-        int ary_l=0, ary_r=0;
-        vector<Term*> terms;
-        if(symtable[_scanner.tokenValue()].first == "[")
-        {
-            ary_l++;
-            _scanner.nextToken();
-            if(symtable[_scanner.tokenValue()].first == "]"){
-                ary_r++;
-                if(ary_r > 0 && ary_l == ary_r){
-                    if(ary_l > 0)
-                        ary_l--;
-                    terms = getArgs();
-                    if(ary_r > 0)
-                        ary_r--;
-                }
-            }
-            return new List(terms);
+    }else if(token == '['){
+        if(_scanner.nextTerm()==']'){
+            _scanner.nextToken() ;
+            return new List();
+        }
+        ary.push(token);
+        List* list = new List(getArgs());
+        if(_scanner.nextTerm()==EOS && !ary.empty())
+            throw string("unexpected token");
+        else
+            return list;
+    }else if(token == ']'){
+        if(ary.top() == '['){
+            ary.pop();
         }
     }
     return nullptr;
@@ -59,8 +67,14 @@ public:
     vector<Term*> args;
     if(term)
       args.push_back(term);
+    if(_scanner.nextTerm()==']')
+        ary.pop();
     while((_currentToken = _scanner.nextToken()) == ',') {
+        if(_scanner.nextTerm()==']')
+            ary.pop();
       args.push_back(createTerm());
+        if(_scanner.nextTerm()==']')
+            ary.pop();
     }
     return args;
   }
@@ -68,7 +82,9 @@ public:
 
 
 private:
+  stack<char> ary;
   Scanner _scanner;
   int _currentToken;
+  //vector<Term*> list;
 };
 #endif

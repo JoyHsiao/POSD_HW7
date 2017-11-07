@@ -60,11 +60,19 @@ public:
 
     string symbol() const{
         string ret =_name.symbol() + "(";
-        for(int i = 0; i < _args.size() - 1 ; i++){
-            ret += _args[i]-> symbol() + ", ";
+        if(_args.size()){
+            for(int i = 0; i < _args.size() - 1 ; i++){
+                ret += _args[i]-> symbol() + ", ";
+            }
+            ret += _args[_args.size()-1]-> symbol() + ")";
         }
-        ret += _args[_args.size()-1]-> symbol() + ")";
+        else
+            ret +=")";
         return  ret;
+    }
+
+    int arity() const{
+        return _args.size();
     }
 
     bool match(Term &term){
