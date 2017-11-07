@@ -240,13 +240,7 @@ TEST_F(ParserTest, parseStructOfStructAllTheWay2) {
 TEST_F(ParserTest, parseStructNoArg) {
   Scanner scanner("point()");
   Parser parser(scanner);
-  std::vector<Term *> v;
-  Atom point("point");
-  Struct S(point, v);
-
-
-  ASSERT_EQ("point()", S.symbol());
-//  ASSERT_EQ("point()", parser.createTerm()->symbol());
+  ASSERT_EQ("point()", parser.createTerm()->symbol());
 }
 
 

@@ -27,6 +27,8 @@ public:
         if(_scanner.currentChar() == '(' ) {
           _scanner.nextToken();
           vector<Term*> terms = getArgs();
+          if(terms.size()==0)
+            return new Struct(*atom, terms);
           if(_currentToken == ')')
             return new Struct(*atom, terms);
         }
