@@ -16,7 +16,7 @@ using std::stack;
 
 #include "utParser.h"
 
-#define DEBUG1
+//#define DEBUG1
 //#define DEBUG2
 //#define DEBUG3
 
@@ -34,11 +34,9 @@ public:
     }else if(token == ATOM || token == ATOMSC){
       Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
       if(_scanner.currentChar() == '(' ) {
-        std::cout<<"~~~~~"<<std::endl;
         return structure();
       }
       else{
-        std::cout<<"~~~~~~~~~"<<std::endl;
         return atom;
       }
     }
@@ -160,7 +158,6 @@ public:
   }
 
   Term * structure() {
-        std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~"<<std::endl;
     Atom structName = Atom(symtable[_scanner.tokenValue()].first);
     int startIndexOfStructArgs = _terms.size();
     _scanner.nextToken();
@@ -169,7 +166,12 @@ public:
     {
       vector<Term *> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
       _terms.erase(_terms.begin() + startIndexOfStructArgs, _terms.end());
-        std::cout<<"#### "<<std::endl;
+        for(int i=0;i<args.size();i++){
+            if(args[i]->symbol() == _node[_node.size()-1]->term->symbol()){
+                _node[_node.size()-1]->term = args[i];
+                _node.pop_back();
+            }
+        }
       return new Struct(structName, args);
     } else {
       throw string("unexpected token");
