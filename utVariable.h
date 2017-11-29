@@ -182,4 +182,12 @@ TEST (Variable, Struct2) {
     ASSERT_EQ(Y.value(), "s(teddy)");
 }
 
+TEST (Variable, aaaaa) {
+    Variable X("X");
+    Variable Y("Y");
+    std::vector<Term *> v ={&Y};
+    Struct s(Atom("s"), v);
+    X.match(s);
+    ASSERT_EQ(X.value(), "s(Y)");
+}
 #endif

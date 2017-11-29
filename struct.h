@@ -94,9 +94,9 @@ public:
     }
     string type() const{return _type;}
     string _type = "struct";
+    std::vector<Term *> _args;
 private:
     Atom _name;
-    std::vector<Term *> _args;
 };
 
 #endif

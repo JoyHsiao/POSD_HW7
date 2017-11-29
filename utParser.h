@@ -320,7 +320,7 @@ TEST_F(ParserTest, VarAStructOfVar) {
   EXPECT_EQ(EQUALITY, et->payload);
   EXPECT_EQ(TERM, et->left->payload);
   EXPECT_EQ(TERM, et->right->payload);
-//  EXPECT_EQ("X", et->left->term->symbol());
+  EXPECT_EQ("X", et->left->term->symbol());
 //  EXPECT_EQ("s(Y)", et->right->term->symbol());
 //  EXPECT_TRUE(et->evaluate());
 }
