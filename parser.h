@@ -2,7 +2,6 @@
 #define PARSER_H
 #include <string>
 #include <stack>
-
 using std::string;
 using std::stack;
 
@@ -12,81 +11,286 @@ using std::stack;
 #include "global.h"
 #include "scanner.h"
 #include "struct.h"
+#include "list.h"
+#include "node.h"
+
+#include "utParser.h"
+
+//#define DEBUG1
+//#define DEBUG2
+//#define DEBUG3
 
 class Parser{
 public:
-  Parser(Scanner scanner) : _scanner(scanner){}
+  Parser(Scanner scanner) : _scanner(scanner), _terms(){}
+
   Term* createTerm(){
     int token = _scanner.nextToken();
+    _currentToken = token;
     if(token == VAR){
       return new Variable(symtable[_scanner.tokenValue()].first);
     }else if(token == NUMBER){
       return new Number(_scanner.tokenValue());
-    }else if(token == ATOM){
-        Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-        if(_scanner.currentChar() == '(' ) {
-          _scanner.nextToken();
-          vector<Term*> terms = getArgs();
-          if(terms.size()==0)
-            return new Struct(*atom, terms);
-          if(_currentToken == ')')
-            return new Struct(*atom, terms);
-        }
-        else
-          return atom;
-    }else if(token == ATOMSC){
-        Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-        if(_scanner.currentChar() == '(' ) {
-          _scanner.nextToken() ;
-          vector<Term*> terms = getArgs();
-          if(_currentToken == ')')
-            return new Struct(*atom, terms);
-        }
-        else
-          return atom;
-    }else if(token == '['){
-        if(_scanner.nextTerm()==']'){
-            _scanner.nextToken() ;
-            return new List();
-        }
-        ary.push(token);
-        List* list = new List(getArgs());
-        if(_scanner.nextTerm()==EOS && !ary.empty())
-            throw string("unexpected token");
-        else
-            return list;
-    }else if(token == ']'){
-        if(ary.top() == '['){
-            ary.pop();
-        }
+    }else if(token == ATOM || token == ATOMSC){
+      Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+      if(_scanner.currentChar() == '(' ) {
+        return structure();
+      }
+      else
+        return atom;
     }
+    else if(token == '['){
+      return list();
+    }
+
     return nullptr;
   }
 
-  vector<Term*> getArgs()
-  {
-    Term* term = createTerm();
-    vector<Term*> args;
-    if(term)
-      args.push_back(term);
-    if(_scanner.nextTerm()==']')
-        ary.pop();
-    while((_currentToken = _scanner.nextToken()) == ',') {
-        if(_scanner.nextTerm()==']')
-            ary.pop();
-      args.push_back(createTerm());
-        if(_scanner.nextTerm()==']')
-            ary.pop();
-    }
-    return args;
+  void matchings(){
+    Node *root;
+    createTerms();
+    prefix();
+    createTree();
   }
 
+  void createTree(){
+    stack<Node *> tree;
+    Node *root;
+    int next;
+    std::string cvt[] = {"SEMICOLON","COMMA", "EQUALITY","TERM"};
+    for(int i=0; i<preNode.size(); i++){
+        #ifdef DEBUG3
+        if(preNode[i]->term)
+            std::cout <<i<<"\t "<<preNode[i]->term->symbol() << std::endl;
+        else
+            std::cout<<i<<"\t "<<cvt[preNode[i]->payload]<< std::endl;
+        #endif    
+    
+        if(preNode[i]->term){
+            if(tree.top()->left == NULL)
+                tree.top()->left = preNode[i];
+            else if(tree.top()->right == NULL){
+                tree.top()->right = preNode[i];
+                root = tree.top();
+                tree.pop();
+                
+                if(!tree.empty()){
+                    if(tree.top()->left == NULL)
+                        tree.top()->left = root;
+                    else if(tree.top()->right == NULL){
+                        tree.top()->right = root;
+                        root = tree.top();
+                        tree.pop();
+                    }
+                }
+            }
+        }
+        else{ //op
+            tree.push(preNode[i]);
+        }
+        std::cout<<"~~~"<< i<<" "<< preNode.size()<<std::endl;
+    }
 
+    while(!tree.empty()){
+        if(tree.top()->right != NULL){
+            root = tree.top();
+            tree.pop();
+            if(tree.top()->left == NULL)
+                tree.top()->left = root;
+            else if(tree.top()->right == NULL)
+                tree.top()->right = root;
+        }
+        else if(tree.top()->right == NULL){
+            tree.top()->right = root;
+            tree.pop();
+        }
+    }
+
+    #ifdef DEBUG3
+    for(int i=0; i<preNode.size(); i++){
+        std::cout<<i<<std::endl;
+        if(preNode[i]->term)
+            std::cout<< preNode[i]->term->symbol() << std::endl;
+        else //op
+            std::cout<<cvt[preNode[i]->payload]<< std::endl;
+
+        if(preNode[i]->left != NULL){
+            if(preNode[i]->left->term){
+                std::cout <<"left  "<<preNode[i]->left->term->symbol() << ' ';
+            }
+            else
+                std::cout<<"left  "<<cvt[preNode[i]->left->payload]<< ' ';
+        }
+        if(preNode[i]->right != NULL){
+            if(preNode[i]->right->term){
+                std::cout <<"right "<<preNode[i]->right->term->symbol() << std::endl;
+            }
+            else
+                std::cout<<"right "<<cvt[preNode[i]->right->payload]<< std::endl;
+        }
+    }
+    #endif
+  }
+
+  Node* expressionTree(){
+    return preNode[0];
+  }
+
+  Term * structure() {
+    Atom structName = Atom(symtable[_scanner.tokenValue()].first);
+    int startIndexOfStructArgs = _terms.size();
+    _scanner.nextToken();
+    createTerms();
+    if(_currentToken == ')')
+    {
+      vector<Term *> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
+      _terms.erase(_terms.begin() + startIndexOfStructArgs, _terms.end());
+      return new Struct(structName, args);
+    } else {
+      throw string("unexpected token");
+    }
+  }
+
+  Term * list() {
+    int startIndexOfListArgs = _terms.size();
+    createTerms();
+    if(_currentToken == ']')
+    {
+      vector<Term *> args(_terms.begin() + startIndexOfListArgs, _terms.end());
+      _terms.erase(_terms.begin() + startIndexOfListArgs, _terms.end());
+      return new List(args);
+    } else {
+      throw string("unexpected token");
+    }
+  }
+
+  vector<Term *> & getTerms() {
+    return _terms;
+  }
 
 private:
-  stack<char> ary;
+  FRIEND_TEST(ParserTest, createArgs);
+  FRIEND_TEST(ParserTest,ListOfTermsEmpty);
+  FRIEND_TEST(ParserTest,listofTermsTwoNumber);
+  FRIEND_TEST(ParserTest, createTerm_nestedStruct3);
+
+  void createTerms() {
+    Term* term = createTerm();
+    Node* node = new Node(TERM,term, NULL, NULL);
+    _node.push_back(node);
+    if(term!=nullptr)
+    {
+      _terms.push_back(term);
+      _currentToken = _scanner.nextToken();
+      while(_currentToken == ',' || _currentToken == ';' || _currentToken == '=') {
+        switch (_currentToken){
+            case ',':
+                node = new Node(COMMA,NULL, NULL, NULL);
+                _node.push_back(node);
+                break;
+            case ';':
+                node = new Node(SEMICOLON,NULL, NULL, NULL);
+                _node.push_back(node);
+                break;
+            case '=':
+                node = new Node(EQUALITY,NULL, NULL, NULL);
+                _node.push_back(node);
+                break;
+        }
+            
+        term = createTerm();
+        _terms.push_back(term);
+        Node* node = new Node(TERM,term, NULL, NULL);
+        _node.push_back(node);
+        _currentToken = _scanner.nextToken();
+      }
+    }
+    
+    #ifdef DEBUG1
+    std::string cvt[] = {"SEMICOLON","COMMA", "EQUALITY","TERM"};
+    for(int i=0; i<_node.size();i++)
+    {
+        if(_node[i]->term)
+            std::cout << _node[i]->term->symbol() << ' ';
+        else //op
+            std::cout<< cvt[_node[i]->payload]<< ' ';
+    }
+    std::cout << std::endl;
+    #endif
+  }
+
+  void prefix(){
+    for(int i=0;i<_node.size();i++){
+        if(_node[i]->term){
+            std::cout << "operators push "<<_node[i]->term->symbol() << std::endl;
+            stackOperators.push(_node[i]);
+        }
+        else{ //op
+            std::string cvt[] = {"SEMICOLON","COMMA", "EQUALITY","TERM"};
+            std::cout<< cvt[_node[i]->payload]<< std::endl;
+            if(stackOperator.empty()){
+                stackOperator.push(_node[i]);
+            std::cout<<"^^^ "<<stackOperator.top()->payload<<std::endl;
+            }
+            else if(stackOperator.top()->payload>_node[i]->payload){
+            std::cout<< "####### "<< std::endl;
+                if(_node[i]->payload == SEMICOLON || _node[i]->payload == COMMA){
+            std::cout<< "### "<< std::endl;
+                    Node *trNode;
+                    preNode.push_back(_node[i]);
+                    preNode.push_back(stackOperator.top());
+                    stackOperator.pop();
+                    trNode = stackOperators.top();
+                    stackOperators.pop();
+                    preNode.push_back(stackOperators.top());
+                    preNode.push_back(trNode);
+                    stackOperators.pop();
+                }
+                else{
+            std::cout<< "$$$ "<< std::endl;
+                    preNode.push_back(stackOperator.top());
+                    stackOperator.pop();
+                }
+            }
+            else{
+            std::cout<<"^^^^^^ "<<_node[i]->payload<<std::endl;
+                stackOperator.push(_node[i]);
+            }
+        }
+    }
+    if(!stackOperator.empty()){
+        for(int i=0; i<stackOperator.size(); i++){
+            Node *trNode;
+            preNode.push_back(stackOperator.top());
+            stackOperator.pop();
+            trNode = stackOperators.top();
+            stackOperators.pop();
+            preNode.push_back(stackOperators.top());
+            preNode.push_back(trNode);
+            stackOperators.pop();
+        }
+    }
+    #ifdef DEBUG2
+    std::string cvt[] = {"SEMICOLON","COMMA", "EQUALITY","TERM"};
+    std::cout<<"pre size= "<< preNode.size()<<std::endl;
+    
+    for(int i=0; i<preNode.size(); i++){
+        if(preNode[i]->term)
+            std::cout << preNode[i]->term->symbol() << ' ';
+        else //op
+            std::cout<< cvt[preNode[i]->payload]<< ' ';
+    }
+    std::cout << std::endl;
+    #endif
+
+  }
+
+  stack<Node *> stackOperator;
+  stack<Node *> stackOperators;
+  vector<Term *> _terms;
+  vector<Node *> _node;
+  vector<Node *> preNode;
   Scanner _scanner;
   int _currentToken;
-  //vector<Term*> list;
 };
 #endif

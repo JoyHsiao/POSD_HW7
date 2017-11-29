@@ -120,6 +120,7 @@ public:
         }
         
         if(_assignable && term.type()=="number"){
+            std::cout<<"=== "<< symbol()<<" "<< term.value() <<std::endl;
             *_value = term.value();
             for (int i =0; i<link.size(); i++){
                 link[i]->_value= _value;
@@ -130,6 +131,7 @@ public:
             }
             _assignable = false;
         }
+            std::cout<<"=== "<< value()<<std::endl;
         return ret;
     }
     string const _symbol;
