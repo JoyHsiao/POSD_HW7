@@ -81,9 +81,10 @@ TEST (Variable, varY_to_varX_and_num1_to_varX) {
     Variable X("X");
     Variable Y("Y");
     Number N(1);
-    X.match(Y);
     X.match(N);
-    ASSERT_EQ( N.value(), X.value());
+    X.match(Y);
+    ASSERT_EQ( "1", X.value());
+    ASSERT_EQ( "1", Y.value());
 }
   
 // ?- X=Y, Y=1.

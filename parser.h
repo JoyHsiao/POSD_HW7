@@ -66,12 +66,30 @@ public:
         else
             std::cout<<i<<"\t "<<cvt[preNode[i]->payload]<< std::endl;
         #endif    
-    
+
         if(preNode[i]->term){
+            bool push = 1;
             if(tree.top()->left == NULL){
+                if(preNode[i]->term->type() == "variable"){
+                    if(eq.size()>0){
+                        for(int j=0; j<eq.size(); j++){
+                            if(eq[j]->term->symbol() == preNode[i]->term->symbol()){
+                                push = 0;
+                                preNode[i] = eq[j];
+                                break;
+                            }
+                        }
+                    }
+                    else{
+                        if(push)
+                            eq.push_back(preNode[i]);
+                    }
+                }
                 tree.top()->left = preNode[i];
             }
             else if(tree.top()->right == NULL){
+                if(preNode[i]->term->type() == "variable")
+                    eq.push_back(preNode[i]);
                 tree.top()->right = preNode[i];
                 root = tree.top();
                 tree.pop();
@@ -91,6 +109,7 @@ public:
             tree.push(preNode[i]);
         }
     }
+
 
     while(!tree.empty()){
         if(tree.top()->right != NULL){
@@ -224,7 +243,7 @@ private:
     vector<Node *> var;
     for(int i=0;i<_node.size();i++){
         if(_node[i]->term){
-            std::cout << "operators push "<<_node[i]->term->symbol() << std::endl;
+            //std::cout << "operators push "<<_node[i]->term->symbol() << std::endl;
             stackOperators.push(_node[i]);
         }
         else{ //op
@@ -234,9 +253,7 @@ private:
                 stackOperator.push(_node[i]);
             }
             else if(stackOperator.top()->payload>_node[i]->payload){
-            std::cout<< "####### "<< std::endl;
                 if(_node[i]->payload == SEMICOLON || _node[i]->payload == COMMA){
-            std::cout<< "### "<< std::endl;
                     Node *trNode;
                     preNode.push_back(_node[i]);
                     preNode.push_back(stackOperator.top());

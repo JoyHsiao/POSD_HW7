@@ -13,7 +13,14 @@ public:
     if(payload == EQUALITY)
         return left->term->match(*right->term);
     else{
-        return left->evaluate() && right->evaluate();
+        bool l,r;
+        l = left->evaluate();
+        r = right->evaluate();
+
+        if(payload == COMMA)
+            return l && r;
+        else
+            return l || r;
     }
   }
 

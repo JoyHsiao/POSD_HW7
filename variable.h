@@ -25,7 +25,6 @@ public:
         bool ret = _assignable;
         bool push;
         if(term.type()=="variable"){
-                std::cout<<"~~~~~"<<std::endl;
             if(_assignable){
                 if(term.assignable()){
                     _value = term._value;
@@ -45,44 +44,32 @@ public:
                 }
             }
             else{
-                std::cout<<"~~"<<std::endl;
                 if(term.assignable()){
-                    string temp = *_value, t_var = term.symbol();
-                    push = 1;
-                    if(temp[0]>64 && temp[0]<91){
-                        for (int i =0; i<link.size(); i++){
-                            if(link[i]->_value == term._value && push)
-                                push = 0;
-                        }
-                        if(push){
-                            term.link.push_back(this);
-                            link.push_back(&term);
-                            //link = term.link;
-                        }
-                    }
-                    if(temp[0]>96 && temp[0]<123){
-                        term._value = _value;
-                        *_value = t_var;
-                        term.link.push_back(this);
-                        _assignable = false;
-                    }
+                    ret = term.assignable();
+                    term.match(*this);
+                    //ret = term._assignable;
+                    //string temp = *_value, t_var = term.symbol();
+                    //push = 1;
+                    //if(temp[0]>64 && temp[0]<91){
+                    //    for (int i =0; i<link.size(); i++){
+                    //        if(link[i]->_value == term._value && push)
+                    //            push = 0;
+                    //    }
+                    //    if(push){
+                    //        term.link.push_back(this);
+                    //        link.push_back(&term);
+                    //        //link = term.link;
+                    //    }
+                    //}
+                    //std::cout<<"~~~~~"<<std::endl;
+                    //if(temp[0]>96 && temp[0]<123){
+                    //    term._value = _value;
+                    //    *_value = t_var;
+                    //    term.link.push_back(this);
+                    //    term._assignable = false;
+                    //}
                 }
             }
-            //if(term.assignable() || _assignable){
-            //    bool push = 1, push_term = 1;
-            //    for (int i =0; i<link.size(); i++){
-            //        if(link[i]->_value == _value && push)
-            //            push =0;
-            //        if(link[i]->_value == term._value && push_term)
-            //            push_term = 0;
-            //    }
-            //    if(push)
-            //        link.push_back(this);
-            //    if(push_term){
-            //        link.push_back(&term);
-            //        term.link = link;
-            //    }
-            //}
         }
         
         if(_assignable && term.type()=="struct" ){
