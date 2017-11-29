@@ -18,7 +18,7 @@ using std::stack;
 
 //#define DEBUG1
 //#define DEBUG2
-//#define DEBUG3
+#define DEBUG3
 
 class Parser{
 public:
@@ -55,6 +55,7 @@ public:
 
   void createTree(){
     stack<Node *> tree;
+    vector<Node *> eq;
     Node *root;
     int next;
     std::string cvt[] = {"SEMICOLON","COMMA", "EQUALITY","TERM"};
@@ -67,8 +68,9 @@ public:
         #endif    
     
         if(preNode[i]->term){
-            if(tree.top()->left == NULL)
+            if(tree.top()->left == NULL){
                 tree.top()->left = preNode[i];
+            }
             else if(tree.top()->right == NULL){
                 tree.top()->right = preNode[i];
                 root = tree.top();
@@ -88,7 +90,6 @@ public:
         else{ //op
             tree.push(preNode[i]);
         }
-        std::cout<<"~~~"<< i<<" "<< preNode.size()<<std::endl;
     }
 
     while(!tree.empty()){
@@ -220,6 +221,7 @@ private:
   }
 
   void prefix(){
+    vector<Node *> var;
     for(int i=0;i<_node.size();i++){
         if(_node[i]->term){
             std::cout << "operators push "<<_node[i]->term->symbol() << std::endl;
@@ -227,10 +229,9 @@ private:
         }
         else{ //op
             std::string cvt[] = {"SEMICOLON","COMMA", "EQUALITY","TERM"};
-            std::cout<< cvt[_node[i]->payload]<< std::endl;
+            //std::cout<< cvt[_node[i]->payload]<< std::endl;
             if(stackOperator.empty()){
                 stackOperator.push(_node[i]);
-            std::cout<<"^^^ "<<stackOperator.top()->payload<<std::endl;
             }
             else if(stackOperator.top()->payload>_node[i]->payload){
             std::cout<< "####### "<< std::endl;
@@ -247,13 +248,11 @@ private:
                     stackOperators.pop();
                 }
                 else{
-            std::cout<< "$$$ "<< std::endl;
                     preNode.push_back(stackOperator.top());
                     stackOperator.pop();
                 }
             }
             else{
-            std::cout<<"^^^^^^ "<<_node[i]->payload<<std::endl;
                 stackOperator.push(_node[i]);
             }
         }

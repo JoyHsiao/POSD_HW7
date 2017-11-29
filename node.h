@@ -10,7 +10,6 @@ public:
   Node(Operators op, Term *t, Node *l, Node *r):payload(op), term(t), left(l), right(r) {}
 
   bool evaluate(){
-    std::cout<<"**** "<<payload<<std::endl;
     if(payload == EQUALITY)
         return left->term->match(*right->term);
     else{

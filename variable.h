@@ -25,6 +25,7 @@ public:
         bool ret = _assignable;
         bool push;
         if(term.type()=="variable"){
+                std::cout<<"~~~~~"<<std::endl;
             if(_assignable){
                 if(term.assignable()){
                     _value = term._value;
@@ -44,6 +45,7 @@ public:
                 }
             }
             else{
+                std::cout<<"~~"<<std::endl;
                 if(term.assignable()){
                     string temp = *_value, t_var = term.symbol();
                     push = 1;
@@ -120,7 +122,6 @@ public:
         }
         
         if(_assignable && term.type()=="number"){
-            std::cout<<"=== "<< symbol()<<" "<< term.value() <<std::endl;
             *_value = term.value();
             for (int i =0; i<link.size(); i++){
                 link[i]->_value= _value;
@@ -131,7 +132,6 @@ public:
             }
             _assignable = false;
         }
-            std::cout<<"=== "<< value()<<std::endl;
         return ret;
     }
     string const _symbol;
