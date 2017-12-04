@@ -349,6 +349,8 @@ TEST_F(ParserTest, TwoVariableMatching4) {
   EXPECT_EQ("1", et->right->right->term->symbol());
 
   EXPECT_EQ("X", terms[0]->symbol());
+  //EXPECT_EQ("s(1)", terms[0]->value());
+  //EXPECT_EQ("s(1)", terms[1]->value());
   EXPECT_EQ("Y", terms[2]->symbol());
   EXPECT_EQ("1", terms[2]->value());
 }
@@ -399,6 +401,7 @@ TEST_F(ParserTest, DisjTwoMatchingSuccess) {
   EXPECT_TRUE(et->evaluate());
 
   EXPECT_EQ("1", terms[0]->value());
+  EXPECT_EQ("2", terms[2]->value());
 }
 
 TEST_F(ParserTest, MatchingSuccess) {
@@ -410,6 +413,8 @@ TEST_F(ParserTest, MatchingSuccess) {
   EXPECT_TRUE(et->evaluate());
 
   EXPECT_EQ("1", terms[0]->value());
+//  EXPECT_EQ("2", terms[2]->value());
+//  EXPECT_EQ("s(s(2))", terms[4]->value());
 }
 
 #endif

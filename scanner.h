@@ -2,7 +2,7 @@
 #define SCANNER_H
 
 #include "global.h"
-
+#include <utility>
 
 #include <string>
 #include <vector>
@@ -118,7 +118,7 @@ private:
     if (symbolExist(s,val)) {
         _tokenValue = val;
     } else {
-      symtable.push_back(pair<string, int>(s,TokenType));
+      symtable.push_back(std::pair<string, int>(s,TokenType));
        _tokenValue = symtable.size()-1; // index to symtable
     }
   }

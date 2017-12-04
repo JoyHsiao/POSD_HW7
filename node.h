@@ -1,32 +1,18 @@
 #ifndef NODE_H
 #define NODE_H
-#include "atom.h"
-
+#include "term.h"
+#include "global.h"
 enum Operators {SEMICOLON, COMMA, EQUALITY, TERM};
-
-class Node {
+class Node 
+{
 public:
-  Node(Operators op):payload(op), term(0), left(0), right(0) {}
-  Node(Operators op, Term *t, Node *l, Node *r):payload(op), term(t), left(l), right(r) {}
+    Node(Operators op);
+    Node(Operators op, Term *t, Node *l, Node *r);
+    bool evaluate();
 
-  bool evaluate(){
-    if(payload == EQUALITY)
-        return left->term->match(*right->term);
-    else{
-        bool l,r;
-        l = left->evaluate();
-        r = right->evaluate();
-
-        if(payload == COMMA)
-            return l && r;
-        else
-            return l || r;
-    }
-  }
-
-  Term *term;
-  Node *left, *right;
-  Operators payload;
+//member
+    Operators    payload;
+    Term         *term;
+    Node         *left, *right;
 };
-
 #endif

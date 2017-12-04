@@ -87,6 +87,16 @@ TEST (Variable, varY_to_varX_and_num1_to_varX) {
     ASSERT_EQ( "1", Y.value());
 }
   
+TEST (Variable, oirjoirejoierj) {
+    Variable X("X");
+    Number N1(1);
+    Number N2(2);
+    X.match(N1);
+    ASSERT_EQ( "1", X.value());
+    X.match(N2);
+    ASSERT_NE( "2", X.value());
+}
+  
 // ?- X=Y, Y=1.
 // X=1
 TEST (Variable, varY_to_varX_and_num1_to_varY) {

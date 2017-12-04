@@ -2,6 +2,7 @@
 #define TERM_H
 
 #include <string>
+#include <vector>
 
 using std::string;
 
@@ -17,7 +18,7 @@ public:
     virtual string type() const=0;                                 
     virtual bool assignable() {return false;}
     string *_value=0;
-    std::vector<Term *>link;
+    std::vector<Term *> link;
     bool _assignable=false;
 };
 #endif                                   

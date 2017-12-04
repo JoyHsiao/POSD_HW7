@@ -23,6 +23,10 @@ public:
         return _name;
     }
 
+    void setArgs(int i, Term *t){
+        _args[i] = t;
+    }
+
     string value(){
     #ifdef DEBUG1
     std::cout<<"= "<<_args[0]->type() << _args[0]->symbol()<<std::endl;

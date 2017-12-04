@@ -62,6 +62,10 @@ public:
     return ret;
   };
 
+  int arity() const{
+    return _elements.size();
+  }
+
   string type() const{
     return _type;
   }
@@ -70,6 +74,14 @@ public:
 public:
   List (): _elements() {}
   List (vector<Term *> const & elements):_elements(elements){}
+  Term * args(int index){
+    return _elements[index];
+  }
+
+  void setArgs(int i, Term *t){
+    _elements[i] = t;
+  }
+
   Term * head() {
     if(_elements.size()<1)
         throw string("Accessing head in an empty list");
