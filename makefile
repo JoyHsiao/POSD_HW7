@@ -1,14 +1,14 @@
 all: hw7
 
-hw7: hw7.o global.o node.o parser.o
+hw7: hw7.o global.o node.o parser.o struct.o list.o term.o
 ifeq (${OS}, Windows_NT)
-	g++ -g3 -o hw7 hw7.o global.o node.o parser.o -lgtest
+	g++ -g3 -o hw7 hw7.o global.o node.o parser.o struct.o term.o list.o-lgtest
 else
-	g++ -g3 -o hw7 hw7.o global.o node.o parser.o -lgtest -lpthread
+	g++ -g3 -o hw7 hw7.o global.o node.o parser.o struct.o term.o list.o -lgtest -lpthread
 endif
 
-hw7.o: hw7.cpp global.h term.h atom.h number.h variable.h struct.h list.h scanner.h parser.h utParser.h utScanner.h node.h
 #utVariable.h utStruct.h utList.h utScanner.h utParser.h
+hw7.o: hw7.cpp term.h atom.h number.h variable.h list.h scanner.h iterator.h utIterator.h
 	g++ -std=gnu++0x -c hw7.cpp
 
 global.o: global.cpp global.h
@@ -19,6 +19,15 @@ node.o: node.cpp node.h
 
 parser.o: parser.cpp parser.h
 	g++ -std=gnu++0x -c parser.cpp
+
+term.o: term.cpp term.h
+	g++ -std=gnu++0x -c term.cpp
+
+list.o: list.cpp list.h
+	g++ -std=gnu++0x -c list.cpp
+
+struct.o: struct.cpp struct.h
+	g++ -std=gnu++0x -c struct.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)

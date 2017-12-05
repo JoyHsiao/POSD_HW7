@@ -3,8 +3,9 @@
 
 #include <string>
 #include <vector>
-
 using std::string;
+
+class Iterator;
 
 class Term{                           
 public:                              
@@ -15,6 +16,7 @@ public:
     virtual bool match(Term & term) {
         return symbol() == term.symbol();
     }
+    virtual Iterator * createIterator();
     virtual string type() const=0;                                 
     virtual bool assignable() {return false;}
     string *_value=0;

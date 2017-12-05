@@ -71,6 +71,11 @@ public:
   }
 
   string _type = "list";
+
+  Iterator * createIterator();
+  Iterator * createBFSIterator();
+  Iterator * createDFSIterator();
+
 public:
   List (): _elements() {}
   List (vector<Term *> const & elements):_elements(elements){}

@@ -19,7 +19,7 @@ public:
         return _args[index];
     }
 
-    Atom const & name() {
+    Atom & name() {
         return _name;
     }
 
@@ -63,15 +63,13 @@ public:
     }
 
     string symbol() const{
-        string ret =_name.symbol() + "(";
-        if(_args.size()){
-            for(int i = 0; i < _args.size() - 1 ; i++){
-                ret += _args[i]-> symbol() + ", ";
-            }
-            ret += _args[_args.size()-1]-> symbol() + ")";
-        }
-        else
-            ret +=")";
+        if(_args.empty())
+            return  _name.symbol() + "()";
+        string ret = _name.symbol() + "(";
+        std::vector<Term *>::const_iterator it = _args.begin();
+        for (; it != _args.end()-1; ++it)
+            ret += (*it)->symbol()+", ";
+        ret  += (*it)->symbol()+")";
         return  ret;
     }
 
@@ -96,11 +94,16 @@ public:
         }
         return false;
     }
+
+    Iterator * createBFSIterator();
+    Iterator * createDFSIterator();
+
+    Iterator * createIterator();
     string type() const{return _type;}
     string _type = "struct";
-    std::vector<Term *> _args;
 private:
     Atom _name;
+    std::vector<Term *> _args;
 };
 
 #endif
