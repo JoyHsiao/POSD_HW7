@@ -2,7 +2,7 @@ all: hw7
 
 hw7: hw7.o global.o node.o parser.o struct.o list.o term.o
 ifeq (${OS}, Windows_NT)
-	g++ -g3 -o hw7 hw7.o global.o node.o parser.o struct.o term.o list.o-lgtest
+	g++ -g3 -o hw7 hw7.o global.o node.o parser.o struct.o term.o list.o -lgtest
 else
 	g++ -g3 -o hw7 hw7.o global.o node.o parser.o struct.o term.o list.o -lgtest -lpthread
 endif
