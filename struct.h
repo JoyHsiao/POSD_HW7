@@ -95,10 +95,10 @@ public:
         return false;
     }
 
-    Iterator * createBFSIterator();
-    Iterator * createDFSIterator();
+    Iterator <Term *> * createBFSIterator();
+    Iterator <Term *> * createDFSIterator();
 
-    Iterator * createIterator();
+    Iterator <Term *> * createIterator();
     string type() const{return _type;}
     string _type = "struct";
 private:

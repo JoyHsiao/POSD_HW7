@@ -72,9 +72,9 @@ public:
 
   string _type = "list";
 
-  Iterator * createIterator();
-  Iterator * createBFSIterator();
-  Iterator * createDFSIterator();
+  Iterator <Term *> *createIterator();
+  Iterator <Term *> *createBFSIterator();
+  Iterator <Term *> *createDFSIterator();
 
 public:
   List (): _elements() {}

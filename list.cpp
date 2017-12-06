@@ -8,16 +8,16 @@
 
 using std::vector;
 
-Iterator * List::createIterator(){
-  return new ListIterator(this);
+Iterator <Term *> * List::createIterator(){
+  return new ListIterator<Term *>(this);
 }
 
-Iterator * List::createBFSIterator(){
-  return new ListBFSIterator(this);
+Iterator <Term *> * List::createBFSIterator(){
+  return new ListBFSIterator<Term *>(this);
 }
 
-Iterator * List::createDFSIterator(){
-  return new ListDFSIterator(this);
+Iterator <Term *> * List::createDFSIterator(){
+  return new ListDFSIterator<Term *>(this);
 }
 
 

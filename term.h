@@ -5,6 +5,7 @@
 #include <vector>
 using std::string;
 
+template <class T>
 class Iterator;
 
 class Term{                           
@@ -16,7 +17,7 @@ public:
     virtual bool match(Term & term) {
         return symbol() == term.symbol();
     }
-    virtual Iterator * createIterator();
+    virtual Iterator<Term *> * createIterator();
     virtual string type() const=0;                                 
     virtual bool assignable() {return false;}
     string *_value=0;

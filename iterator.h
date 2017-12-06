@@ -5,20 +5,22 @@
 #include "struct.h"
 #include "list.h"
 
-class Iterator {
+template <class T>
+class Iterator{
 public:
   virtual void first() = 0;
   virtual void next() = 0;
-  virtual Term* currentItem() const = 0;
+  virtual T currentItem() const = 0;
   virtual bool isDone() const = 0;
 };
 
-class NullIterator :public Iterator{
+template <class T>
+class NullIterator :public Iterator <T>{
 public:
   NullIterator(Term *n){}
   void first(){}
   void next(){}
-  Term * currentItem() const{
+  T currentItem() const{
       return nullptr;
   }
   bool isDone() const{
@@ -27,14 +29,15 @@ public:
 
 };
 
-class StructIterator :public Iterator {
+template <class T>
+class StructIterator :public Iterator <T>{
 public:
   friend class Struct;
   void first() {
     _index = 0;
   }
 
-  Term* currentItem() const {
+  T currentItem() const {
     return _s->args(_index);
   }
 
@@ -52,7 +55,8 @@ private:
   Struct* _s;
 };
 
-class StructBFSIterator :public Iterator {
+template <class T>
+class StructBFSIterator :public Iterator <T> {
 public:
   friend class Struct;
   void first() {
@@ -61,7 +65,7 @@ public:
     bfs_sun();
   }
 
-  Term* currentItem() const {
+  T currentItem() const {
     return _bfs[_index];
   }
 
@@ -122,13 +126,13 @@ public:
 private:
   StructBFSIterator(Struct *s): _index(0), _s(s) {}
   
-  void _struct(Term *sun){
+  void _struct(T sun){
     Struct *s = dynamic_cast<Struct *>(sun);
     _bfs.push_back(s);
     Tempbfs.push_back(s);
   }
 
-  void _list(Term *sun){
+  void _list(T sun){
     List *l = dynamic_cast<List *>(sun);
     _bfs.push_back(l);
     Tempbfs.push_back(l);
@@ -136,11 +140,12 @@ private:
 
   int _index;
   Struct* _s;
-  vector <Term *> _bfs;
-  vector <Term *> Tempbfs;
+  vector <T> _bfs;
+  vector <T> Tempbfs;
 };
 
-class StructDFSIterator :public Iterator {
+template <class T>
+class StructDFSIterator :public Iterator <T>{
 public:
   friend class Struct;
   void first() {
@@ -148,7 +153,7 @@ public:
     dfs();
   }
 
-  Term* currentItem() const {
+  T currentItem() const {
     return _dfs[_index];
   }
 
@@ -176,7 +181,7 @@ public:
 private:
   StructDFSIterator(Struct *s): _index(0), _s(s) {}
   
-  void _struct(Term *sun){
+  void _struct(T sun){
     Struct *s = dynamic_cast<Struct *>(sun);
     _dfs.push_back(s);
     for(int i=0; i<s->arity(); i++){
@@ -192,7 +197,7 @@ private:
     }
   }
 
-  void _list(Term *sun){
+  void _list(T sun){
     List *l = dynamic_cast<List *>(sun);
     _dfs.push_back(l);
     for(int i=0; i<l->arity(); i++){
@@ -209,10 +214,11 @@ private:
 
   int _index;
   Struct* _s;
-  vector <Term *> _dfs;
+  vector <T> _dfs;
 };
 
-class ListIterator :public Iterator {
+template <class T>
+class ListIterator :public Iterator <T>{
 public:
   ListIterator(List *list): _index(0), _list(list) {}
 
@@ -220,7 +226,7 @@ public:
     _index = 0;
   }
 
-  Term* currentItem() const {
+  T currentItem() const {
     return _list->args(_index);
   }
 
@@ -236,7 +242,8 @@ private:
   List* _list;
 };
 
-class ListBFSIterator :public Iterator {
+template <class T>
+class ListBFSIterator :public Iterator <T>{
 public:
   friend class List;
   void first() {
@@ -245,7 +252,7 @@ public:
     bfs_sun();
   }
 
-  Term* currentItem() const {
+  T currentItem() const {
     return _bfs[_index];
   }
 
@@ -306,13 +313,13 @@ public:
 private:
   ListBFSIterator(List *s): _index(0), _s(s) {}
   
-  void _struct(Term *sun){
+  void _struct(T sun){
     Struct *s = dynamic_cast<Struct *>(sun);
     _bfs.push_back(s);
     Tempbfs.push_back(s);
   }
 
-  void _list(Term *sun){
+  void _list(T sun){
     List *l = dynamic_cast<List *>(sun);
     _bfs.push_back(l);
     Tempbfs.push_back(l);
@@ -320,11 +327,12 @@ private:
 
   int _index;
   List* _s;
-  vector <Term *> _bfs;
-  vector <Term *> Tempbfs;
+  vector <T> _bfs;
+  vector <T> Tempbfs;
 };
 
-class ListDFSIterator :public Iterator {
+template <class T>
+class ListDFSIterator :public Iterator <T>{
 public:
   friend class List;
   void first() {
@@ -332,7 +340,7 @@ public:
     dfs();
   }
 
-  Term* currentItem() const {
+  T currentItem() const {
     return _dfs[_index];
   }
 
@@ -360,7 +368,7 @@ public:
 private:
   ListDFSIterator(List *s): _index(0), _s(s) {}
   
-  void _struct(Term *sun){
+  void _struct(T sun){
     Struct *s = dynamic_cast<Struct *>(sun);
     _dfs.push_back(s);
     for(int i=0; i<s->arity(); i++){
@@ -376,7 +384,7 @@ private:
     }
   }
 
-  void _list(Term *sun){
+  void _list(T sun){
     List *l = dynamic_cast<List *>(sun);
     _dfs.push_back(l);
     for(int i=0; i<l->arity(); i++){
@@ -393,7 +401,7 @@ private:
 
   int _index;
   List* _s;
-  vector <Term *> _dfs;
+  vector <T> _dfs;
 };
 
 #endif
